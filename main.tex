@@ -1,0 +1,142 @@
+\documentclass{article}
+\usepackage{amsmath,amssymb,amsfonts,bm}
+\usepackage{hyperref}
+\usepackage[switch]{lineno}
+% \linenumbers
+
+\bibliographystyle{elsarticle-num}
+
+\begin{document}
+\section{Introduction}
+\section{MLS/RK meshfree approximation}
+In accordance with Moving Least Square approximation (MLS) \cite{belytschkoElementFreeGalerkin1994} or Reproducing Kernel approximation (RK) \cite{liu1995reproducing}, the domain $\Omega$ is discrete by a set of meshfree nodes $\{\boldsymbol x_I\}_{I=1}^{n_p}$, $n_p$ is the total number of meshfree nodes. And then, a variable $u$ in $\Omega$ can be approximated as follow:
+\begin{equation}
+    u^h(\boldsymbol x) = \sum_{I=1}^{n_p} \Psi_I(\boldsymbol x) d_I
+\end{equation}
+where $\Psi_I$ and $d_I$ are the meshfree shape function and the nodal coefficient associated with meshfree node $\boldsymbol x_I$. This RK shape function $\Psi_I$ is constructed by the undetermined coefficient vector $\boldsymbol c$, the basis function vector $\boldsymbol p$ and the kernel function $\phi$:
+\begin{equation}
+    \Psi_I(\boldsymbol x) = \boldsymbol c^{T}(\boldsymbol x) \boldsymbol p(\boldsymbol x_I - \boldsymbol x) \phi(\boldsymbol x_I - \boldsymbol x)
+    \label{shapefunction}
+\end{equation} \par
+For instance in 2D case, the basis function vector $\boldsymbol p$ contains the $p$th order complete monomials:
+\begin{equation}
+    \boldsymbol p(\boldsymbol x) = \{1,\;x,\;y,\;x^2,\;\dots,\;y^p\}^T
+\end{equation} \par
+The kernel function $\phi$ determines the support size and continuity of shape function, and the cubic and quintic spline functions is chosen herein for elasticity problems and thin plate problems respectively.
+\begin{equation}
+    \phi(\boldsymbol x_I - \boldsymbol x) = \varphi(\frac{x_I-x}{h_x})\varphi(\frac{y_I-y}{h_y})
+\end{equation}
+where $h_i$ is the 
+\begin{itemize}
+    \item Cubic spline function:
+\begin{equation}
+    \varphi(r) = \frac{1}{3!}
+    \left \{
+        \begin{array}{lr}
+            (2-2r)^3 - 4(1-2r)^3, & r\le\frac{1}{2} \\
+            (2-2r)^3, & \frac{1}{2}<r\le 1 \\
+            0, & r> 1 \\
+        \end{array}
+    \right .
+\end{equation}
+    \item Quintic spline function:
+\begin{equation}
+    \varphi(r) = \frac{1}{5!}
+    \left \{
+        \begin{array}{lr}
+            (3-3r)^5 - 6(2-3r)^5 + 15(1-3r)^5, & r\le\frac{1}{3} \\
+            (3-3r)^5 - 6(2-3r)^5, & \frac{1}{3}<r\le\frac{2}{3} \\
+            (3-3r)^5, & \frac{2}{3}<r\le 1 \\
+            0, & r> 1 \\
+        \end{array}
+    \right .
+\end{equation}
+\end{itemize}
+in which $h_i$ is the support size in $x_i$ axis direction. \par
+The undetermined vector $\boldsymbol c$ can be attain by enforcing the following consistency condition:
+\begin{equation}
+    \sum_{I=1}^{n_p} \Psi_I(\boldsymbol x) \boldsymbol p(\boldsymbol x_I) = \boldsymbol p(\boldsymbol x)
+\end{equation}
+or with a shift-form
+\begin{equation}
+    \sum_{I=1}^{n_p} \Psi_I(\boldsymbol x) \boldsymbol p(\boldsymbol x_I - \boldsymbol x) = \boldsymbol p(\boldsymbol 0)
+\end{equation}
+substituting Eq.\ref{shapefunction} into the consistency condition leads to:
+\begin{equation}
+    \boldsymbol c(\boldsymbol x) = \boldsymbol A^{-1}(\boldsymbol x) \boldsymbol p(\boldsymbol 0)
+\end{equation}
+with moment matrix $\boldsymbol A$
+\begin{equation}
+    \boldsymbol A(\boldsymbol x) = \sum_{I=1}^{n_p}\boldsymbol p^T(\boldsymbol x_I - \boldsymbol x)\boldsymbol p(\boldsymbol x_I - \boldsymbol x)\phi(\boldsymbol x_I - \boldsymbol x)
+\end{equation}\par
+It is noted that, to ensure the invertibility of moment matrix, a well-posed meshfree nodal distribution should be required, i.e. there should be sufficient meshfree nodes be covered by their support, as shown in Fig. \ref{}. Under this circumstance,
+\begin{equation}
+\Vert u - u^i \Vert_{H_k} \le Ch^{p-k+1} \vert u \vert_{H_{p+1}}, \quad \forall k \le p+1
+\end{equation}
+
+\section{Hellinger-Reissner based RK gradient smoothing meshfree formulation}
+\subsection{Elasticity problems}
+\begin{multline}\label{elasticityenergy}
+    \mathcal L(\boldsymbol \sigma, \boldsymbol u) = \int_{\Omega} \frac{1}{2} \boldsymbol \varepsilon(\boldsymbol \sigma) : \boldsymbol \sigma d\Omega - \int_{\Gamma_u} \boldsymbol n \cdot \boldsymbol \sigma \cdot \bar{\boldsymbol u} d\Gamma \\
+    - \int_{\Gamma_t} \boldsymbol u \cdot (\boldsymbol \sigma \cdot \boldsymbol n - \bar{\boldsymbol t}) d\Gamma + \int_{\Omega} \boldsymbol u \cdot (\boldsymbol \sigma \cdot \nabla + \bar{\boldsymbol b}) d\Omega
+\end{multline}
+where $\boldsymbol \varepsilon$ and $\boldsymbol \sigma$ stands for the strain and stress tensor respectively. $\Gamma_u$ and $\Gamma_t$ are the essential boundary and natural boundary satisfying that $\Gamma_u \cup \Gamma_t = \partial \Omega,\; \Gamma_u \cap \Gamma_t = \varnothing$. $\bar{\boldsymbol u}$ and $\bar{\boldsymbol t}$ are the prescribed displacement and traction on $\Gamma_u$ and $\Gamma_t$. $\bar{\boldsymbol b}$ denotes to the prescribed body force in $\Omega$. Introducing the standard variation argument to Eq.\ref{elasticityenergy} leads to the following HR weak form:
+\begin{equation}
+    \mathrm{find} \; \boldsymbol \sigma, \boldsymbol u \in H_1 \quad
+    \begin{array}{rr}
+    a(\delta \boldsymbol \sigma,\boldsymbol \sigma) + b(\delta \boldsymbol \sigma, \boldsymbol u) = g(\delta \boldsymbol \sigma) & \forall \delta \boldsymbol \sigma \in H_1 \\
+    b(\boldsymbol \sigma, \delta \boldsymbol u) = f(\delta \boldsymbol u) & \forall \delta \boldsymbol u \in H_1
+    \end{array}
+\end{equation}
+where $a:L_2\times L_2\rightarrow \mathbb R$, $b:L_2\times L_2 \rightarrow \mathbb R$ are bilinear forms: 
+\begin{equation}
+    a(\delta \boldsymbol \sigma,\boldsymbol \sigma) = \int_{\Omega} \boldsymbol \varepsilon(\delta \boldsymbol \sigma):\boldsymbol \sigma d\Omega
+\end{equation}
+\begin{equation}
+    b(\boldsymbol \sigma,\boldsymbol u) = - \int_{\Gamma} \boldsymbol u \cdot \boldsymbol \sigma \cdot \boldsymbol n d\Gamma + \int_{\Omega} \boldsymbol u \cdot \boldsymbol \sigma \cdot \nabla d\Omega + \int_{\Gamma_u} \boldsymbol u \cdot \boldsymbol \sigma \cdot \boldsymbol n d\Gamma
+\end{equation}
+and $g,f$ are the linear operators evaluated by
+\begin{equation}
+    g(\delta \boldsymbol \sigma) = \int_{\Gamma_u} \boldsymbol n \cdot \delta \boldsymbol \sigma \cdot \bar{\boldsymbol u} d\Gamma
+\end{equation}
+\begin{equation}
+    f(\delta \boldsymbol u) = - \int_{\Gamma_t} \delta \boldsymbol u \cdot \bar{\boldsymbol t} d\Gamma - \int_{\Omega} \delta \boldsymbol u \cdot \bar{\boldsymbol b} d\Omega
+\end{equation} \par
+In Hellinger-Reissner reproducing kernel gradient smoothing framework, the displacement $\boldsymbol u$ is approximated by traditional meshfree shape functions, namely $\boldsymbol u^h$:
+\begin{equation}
+    \boldsymbol u^h(\boldsymbol x) = \sum_{I=1}^{n_p} \Psi_I(\boldsymbol x) \boldsymbol d_I
+\end{equation}
+On the other hand, the components of stress tensor is assumed as a polynomial in each background cells:
+\begin{equation}
+    \sigma^h_{ij}(\boldsymbol x) = \boldsymbol q^T(\boldsymbol x) \boldsymbol c_{ij}, \quad \mathrm{in}\; \Omega_C
+\end{equation}
+\begin{equation}
+    \boldsymbol q(\boldsymbol x) = \{1,\;x,\;y,\;\dots,\;y^{p-1}\}^T
+\end{equation}
+\begin{equation}
+\sup_{\boldsymbol \sigma^h \in Q}\Vert \boldsymbol \sigma - \boldsymbol \sigma^h \Vert_{e} \le Ch^{p} \vert \boldsymbol \sigma \vert
+\end{equation}
+\subsection{Thin plate problems}
+\begin{equation}\label{plateenergy}
+    \begin{split}
+        \mathcal L(\boldsymbol M, w) 
+        &= \int_{\Omega} \frac{1}{2} \boldsymbol \kappa(\boldsymbol M) : \boldsymbol M d\Omega \\ 
+        &- \int_{\Gamma_w} V_{\boldsymbol n}(\boldsymbol M) \bar{w} d\Gamma + \int_{\Gamma_\theta} M_{\boldsymbol{nn}}(\boldsymbol M)\bar{\theta}_{\boldsymbol n} d\Gamma - P(\boldsymbol M)\bar{w}\vert_{\Gamma_c} \\
+        &+ \int_{\Gamma_M} \theta_{\boldsymbol n}(w)(M_{\boldsymbol{nn}}-\bar{M}_{\boldsymbol{nn}})d\Gamma - \int_{\Gamma_V} w(V_{\boldsymbol n} - \bar{V}_{\boldsymbol n})d\Gamma \\ 
+        &- w(P-\bar P)\vert_{\Gamma_p} + \int_{\Omega} w(\nabla \cdot \boldsymbol M \cdot \nabla + \bar{q})d\Omega
+    \end{split}
+\end{equation}
+\begin{equation}
+    \mathrm{find} \; \boldsymbol M, w \in H_2 \quad
+    \begin{array}{rr}
+    a(\delta \boldsymbol M,\boldsymbol M) + b(\delta \boldsymbol M, w) = g(\delta \boldsymbol M) & \forall \delta \boldsymbol M \in L_2 \\
+    b(\boldsymbol M, \delta w) = f(\delta w) & \forall \delta w \in H_2
+    \end{array}
+\end{equation}
+\begin{equation}
+    a(\delta \boldsymbol M,\boldsymbol M) = \int_{\Omega} \boldsymbol \kappa(\delta \boldsymbol M): \boldsymbol M d\Omega
+\end{equation}
+
+\section{Error analysis for HR gradient smoothing meshfree formulation}
+\bibliography{reference}
+\end{document}

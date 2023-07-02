@@ -7,11 +7,8 @@
 
 \bibitem{belytschkoElementFreeGalerkin1994}
 T.~Belytschko, Y.~Y. Lu, L.~Gu, Element‐free {{Galerkin}} methods 37~(2)  229--256.
-\newblock \href {http://arxiv.org/abs/10208278} {\path{arXiv:10208278}}, \href {https://doi.org/10.1002/nme.1620370205} {\path{doi:10.1002/nme.1620370205}}.
 
 \bibitem{liu1995reproducing}
-W.~K. Liu, S.~Jun, Y.~F. Zhang, \href{https://doi.org/10.1002/fld.1650200824 http://doi.wiley.com/10.1002/fld.1650200824}{Reproducing kernel particle methods} 20~(8-9)  1081--1106.
-\newblock \href {https://doi.org/10.1002/fld.1650200824} {\path{doi:10.1002/fld.1650200824}}.
-\newline\urlprefix\url{https://doi.org/10.1002/fld.1650200824 http://doi.wiley.com/10.1002/fld.1650200824}
+W.~K. Liu, S.~Jun, Y.~F. Zhang, Reproducing kernel particle methods 20~(8-9)  1081--1106.
 
 \end{thebibliography}

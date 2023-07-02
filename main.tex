@@ -1,8 +1,9 @@
 \documentclass{article}
-\usepackage{amsmath,amssymb,amsfonts,bm}
+\usepackage{amsmath,amssymb,amsfonts,amsthm,bm}
 \usepackage{hyperref}
 \usepackage[switch]{lineno}
 % \linenumbers
+\newtheorem{theorem}{Theorem}
 
 \bibliographystyle{elsarticle-num}
 
@@ -31,25 +32,21 @@ where $h_i$ is the
     \item Cubic spline function:
 \begin{equation}
     \varphi(r) = \frac{1}{3!}
-    \left \{
-        \begin{array}{lr}
-            (2-2r)^3 - 4(1-2r)^3, & r\le\frac{1}{2} \\
-            (2-2r)^3, & \frac{1}{2}<r\le 1 \\
-            0, & r> 1 \\
-        \end{array}
-    \right .
+    \begin{cases}
+        (2-2r)^3 - 4(1-2r)^3, & r\le\frac{1}{2} \\
+        (2-2r)^3, & \frac{1}{2}<r\le 1 \\
+        0, & r> 1 \\
+    \end{cases}
 \end{equation}
     \item Quintic spline function:
 \begin{equation}
     \varphi(r) = \frac{1}{5!}
-    \left \{
-        \begin{array}{lr}
-            (3-3r)^5 - 6(2-3r)^5 + 15(1-3r)^5, & r\le\frac{1}{3} \\
-            (3-3r)^5 - 6(2-3r)^5, & \frac{1}{3}<r\le\frac{2}{3} \\
-            (3-3r)^5, & \frac{2}{3}<r\le 1 \\
-            0, & r> 1 \\
-        \end{array}
-    \right .
+    \begin{cases}
+        (3-3r)^5 - 6(2-3r)^5 + 15(1-3r)^5, & r\le\frac{1}{3} \\
+        (3-3r)^5 - 6(2-3r)^5, & \frac{1}{3}<r\le\frac{2}{3} \\
+        (3-3r)^5, & \frac{2}{3}<r\le 1 \\
+        0, & r> 1 \\
+    \end{cases}
 \end{equation}
 \end{itemize}
 in which $h_i$ is the support size in $x_i$ axis direction. \par
@@ -61,7 +58,7 @@ or with a shift-form
 \begin{equation}
     \sum_{I=1}^{n_p} \Psi_I(\boldsymbol x) \boldsymbol p(\boldsymbol x_I - \boldsymbol x) = \boldsymbol p(\boldsymbol 0)
 \end{equation}
-substituting Eq.\ref{shapefunction} into the consistency condition leads to:
+substituting Eq. \ref{shapefunction} into the consistency condition leads to:
 \begin{equation}
     \boldsymbol c(\boldsymbol x) = \boldsymbol A^{-1}(\boldsymbol x) \boldsymbol p(\boldsymbol 0)
 \end{equation}
@@ -75,7 +72,12 @@ It is noted that, to ensure the invertibility of moment matrix, a well-posed mes
 \end{equation}
 
 \section{Hellinger-Reissner based RK gradient smoothing meshfree formulation}
+
+In this section, the Hellinger-Reissner reproducing kernel gradient smoothing meshfree formulations for second order elasticity problems and forth order thin plate problems are briefly introduced here.
+
 \subsection{Elasticity problems}
+
+For elasticity problems, the Hellinger-Reissner energy functional is given by:
 \begin{multline}\label{elasticityenergy}
     \mathcal L(\boldsymbol \sigma, \boldsymbol u) = \int_{\Omega} \frac{1}{2} \boldsymbol \varepsilon(\boldsymbol \sigma) : \boldsymbol \sigma d\Omega - \int_{\Gamma_u} \boldsymbol n \cdot \boldsymbol \sigma \cdot \bar{\boldsymbol u} d\Gamma \\
     - \int_{\Gamma_t} \boldsymbol u \cdot (\boldsymbol \sigma \cdot \boldsymbol n - \bar{\boldsymbol t}) d\Gamma + \int_{\Omega} \boldsymbol u \cdot (\boldsymbol \sigma \cdot \nabla + \bar{\boldsymbol b}) d\Omega
@@ -110,12 +112,20 @@ On the other hand, the components of stress tensor is assumed as a polynomial in
 \begin{equation}
     \sigma^h_{ij}(\boldsymbol x) = \boldsymbol q^T(\boldsymbol x) \boldsymbol c_{ij}, \quad \mathrm{in}\; \Omega_C
 \end{equation}
+with
 \begin{equation}
     \boldsymbol q(\boldsymbol x) = \{1,\;x,\;y,\;\dots,\;y^{p-1}\}^T
 \end{equation}
-\begin{equation}
-\sup_{\boldsymbol \sigma^h \in Q}\Vert \boldsymbol \sigma - \boldsymbol \sigma^h \Vert_{e} \le Ch^{p} \vert \boldsymbol \sigma \vert
-\end{equation}
+\begin{theorem}
+    \begin{equation}
+        \sup_{\boldsymbol \sigma^h \in Q}\Vert \boldsymbol \sigma - \boldsymbol \sigma^h \Vert_{e} \le Ch^{p} \vert \boldsymbol \sigma \vert
+    \end{equation}
+\end{theorem}
+\begin{proof}
+    \begin{equation}
+        \sigma_{ij}(\boldsymbol{x}) = \sigma_{ij}(\boldsymbol{0}) + x \sigma_{ij}
+    \end{equation}
+\end{proof}
 \subsection{Thin plate problems}
 \begin{equation}\label{plateenergy}
     \begin{split}
@@ -138,5 +148,13 @@ On the other hand, the components of stress tensor is assumed as a polynomial in
 \end{equation}
 
 \section{Error analysis for HR gradient smoothing meshfree formulation}
+\section*{Appendix A}
+In this appendix, we define some funcitional operator used in the main sections. Firstly, the energy norms for elasticity problems and thin plate problems are defined by:
+\begin{equation}
+    \Vert \boldsymbol{\sigma} \Vert_e = \frac{1}{2} a_{2}(\boldsymbol{\sigma},\boldsymbol{\sigma}) = \int_{\Omega} \frac{1}{2} \boldsymbol{\varepsilon}(\boldsymbol{\sigma}) : \boldsymbol{\sigma} d\Omega
+\end{equation} 
+\begin{equation}
+    \Vert \boldsymbol{M} \Vert_e = \frac{1}{2}a_4(\boldsymbol{M}, \boldsymbol{M}) = \int_{\Omega} \frac{1}{2} \boldsymbol{\kappa}(\boldsymbol{M}) : \boldsymbol{M} d\Omega
+\end{equation}
 \bibliography{reference}
 \end{document}

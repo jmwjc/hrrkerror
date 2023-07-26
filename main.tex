@@ -8,7 +8,95 @@
 \bibliographystyle{elsarticle-num}
 
 \begin{document}
+
 \section{Introduction}
+
+\section{Hellinger-Reissner weak form for elastic thin plate problems}
+
+\subsection{Kinematics}
+
+Consider a thin plate with the thickness $h$, as shown in figure \ref{}, 
+Accordance with Kirchhoff's hypothesis, the displacement for a thin plate denoted by $\hat {\boldsymbol u}$ is a linear function in deflection direction:
+\begin{equation}
+    \begin{cases}
+        \hat u_{\alpha}(\boldsymbol x) = u_{\alpha}(x_1,x_2) - x_3 w_{,\alpha} & \alpha = 1,2 \\
+        \hat u_{3}(\boldsymbol x) = w(x_1,x_2)
+    \end{cases}
+\end{equation}
+with the xiaobianxing assumption, the components of strain tensor is given by:
+\begin{equation}
+    \begin{cases}
+        \hat \varepsilon_{\alpha \beta} = \frac{1}{2}(\hat u_{\alpha,\beta} + \hat u_{\beta,\alpha}) = \varepsilon_{\alpha \beta} + x_3 \kappa_{\alpha \beta}, & \alpha,\beta = 1,2 \\
+        \hat \varepsilon_{3i} = \hat \varepsilon_{i3} = 0, & i = 1,2,3
+    \end{cases}
+\end{equation}
+with
+\begin{equation}
+    \varepsilon_{\alpha \beta} = \frac{1}{2}(u_{\alpha,\beta} + u_{\beta,\alpha}), \quad \kappa_{\alpha \beta} = -w_{,\alpha \beta}
+\end{equation}
+under this circumstance, the potential prob
+the problem can be split into two independent problems, the traditional plane stress problem with variable $u_\alpha$, and the thin plate problem with variable $w$.
+\begin{equation}
+    \hat \sigma_{\alpha \beta} = \mathbb{C}_{\alpha \beta \gamma \eta} \hat \varepsilon_{\gamma \eta} = \mathbb{C}_{\alpha \beta \gamma \eta}(\varepsilon_{\gamma \eta} + x_3 \kappa_{\gamma \eta})
+\end{equation}
+\begin{equation}
+    \begin{split}
+        \int_{\hat \Omega}\frac{1}{2}\hat \varepsilon_{ij} \hat \sigma_{ij} d\Omega &= \int_{\Omega}\int_{-\frac{h}{2}}^{\frac{h}{2}}\frac{1}{2}(\varepsilon_{\alpha \beta} + x_3 \kappa_{\alpha \beta})\mathbb{C}_{\alpha \beta \gamma \eta}(\varepsilon_{\gamma \eta} + x_3 \kappa_{\gamma \eta})dx_3 d\Omega \\
+        &= \int_{\Omega} \frac{1}{2}\varepsilon_{\alpha \beta} \sigma_{\alpha \beta} d\Omega + \int_{\Omega} \frac{1}{2} \kappa_{\alpha \beta} M_{\alpha \beta} d\Omega
+    \end{split}
+\end{equation}
+where
+\begin{equation}
+    \sigma_{\alpha \beta} = \mathbb{C}_{\alpha \beta \gamma \eta} \varepsilon_{\gamma \eta}, \quad M_{\alpha \beta} = \frac{h^3}{12} \mathbb{C}_{\alpha \beta \gamma \eta} \kappa_{\gamma \eta}
+\end{equation}
+
+\subsection{Elasticity problems}
+
+For elasticity problems, the Hellinger-Reissner energy functional is given by:
+\begin{multline}\label{elasticityenergy}
+    \mathcal L(\boldsymbol \sigma, \boldsymbol u) = \int_{\Omega} \frac{1}{2} \boldsymbol \varepsilon(\boldsymbol \sigma) : \boldsymbol \sigma d\Omega - \int_{\Gamma_u} \boldsymbol n \cdot \boldsymbol \sigma \cdot \bar{\boldsymbol u} d\Gamma \\
+    - \int_{\Gamma_t} \boldsymbol u \cdot (\boldsymbol \sigma \cdot \boldsymbol n - \bar{\boldsymbol t}) d\Gamma + \int_{\Omega} \boldsymbol u \cdot (\boldsymbol \sigma \cdot \nabla + \bar{\boldsymbol b}) d\Omega
+\end{multline}
+where $\boldsymbol \varepsilon$ and $\boldsymbol \sigma$ stands for the strain and stress tensor respectively. $\Gamma_u$ and $\Gamma_t$ are the essential boundary and natural boundary satisfying that $\Gamma_u \cup \Gamma_t = \partial \Omega,\; \Gamma_u \cap \Gamma_t = \varnothing$. $\bar{\boldsymbol u}$ and $\bar{\boldsymbol t}$ are the prescribed displacement and traction on $\Gamma_u$ and $\Gamma_t$. $\bar{\boldsymbol b}$ denotes to the prescribed body force in $\Omega$. Introducing the standard variation argument to Eq.\ref{elasticityenergy} leads to the following HR weak form:
+\begin{equation}
+    \mathrm{find} \; \boldsymbol \sigma, \boldsymbol u \in H_1 \quad
+    \begin{cases}
+        a(\delta \boldsymbol \sigma,\boldsymbol \sigma) + b(\delta \boldsymbol \sigma, \boldsymbol u) = g(\delta \boldsymbol \sigma) & \forall \delta \boldsymbol \sigma \in H_1 \\
+        \qquad \qquad \quad b(\boldsymbol \sigma, \delta \boldsymbol u) = f(\delta \boldsymbol u) & \forall \delta \boldsymbol u \in H_1
+    \end{cases}
+\end{equation}
+where $a:L_2\times L_2\rightarrow \mathbb R$, $b:L_2\times L_2 \rightarrow \mathbb R$ are bilinear forms: 
+\begin{align}
+    a(\delta \boldsymbol \sigma,\boldsymbol \sigma) &= \int_{\Omega} \boldsymbol \varepsilon(\delta \boldsymbol \sigma):\boldsymbol \sigma d\Omega \\
+    b(\delta \boldsymbol \sigma,\boldsymbol u) &= - \int_{\Gamma} \boldsymbol u \cdot \delta \boldsymbol \sigma \cdot \boldsymbol n d\Gamma + \int_{\Omega} \boldsymbol u \cdot \delta \boldsymbol \sigma \cdot \nabla d\Omega + \int_{\Gamma_u} \boldsymbol u \cdot \delta \boldsymbol \sigma \cdot \boldsymbol n d\Gamma
+\end{align}
+and $g,f$ are the linear operators evaluated by
+\begin{align}
+    g(\delta \boldsymbol \sigma) &= \int_{\Gamma_u} \boldsymbol n \cdot \delta \boldsymbol \sigma \cdot \bar{\boldsymbol u} d\Gamma \\
+    f(\delta \boldsymbol u) &= - \int_{\Gamma_t} \delta \boldsymbol u \cdot \bar{\boldsymbol t} d\Gamma - \int_{\Omega} \delta \boldsymbol u \cdot \bar{\boldsymbol b} d\Omega
+\end{align}
+
+\subsection{Thin plate problems}
+\begin{equation}\label{plateenergy}
+    \begin{split}
+        \mathcal L(\boldsymbol M, w) 
+        &= \int_{\Omega} \frac{1}{2} \boldsymbol \kappa(\boldsymbol M) : \boldsymbol M d\Omega \\ 
+        &- \int_{\Gamma_w} V_{\boldsymbol n}(\boldsymbol M) \bar{w} d\Gamma + \int_{\Gamma_\theta} M_{\boldsymbol{nn}}(\boldsymbol M)\bar{\theta}_{\boldsymbol n} d\Gamma - P(\boldsymbol M)\bar{w}\vert_{\Gamma_c} \\
+        &+ \int_{\Gamma_M} \theta_{\boldsymbol n}(w)(M_{\boldsymbol{nn}}-\bar{M}_{\boldsymbol{nn}})d\Gamma - \int_{\Gamma_V} w(V_{\boldsymbol n} - \bar{V}_{\boldsymbol n})d\Gamma \\ 
+        &- w(P-\bar P)\vert_{\Gamma_p} + \int_{\Omega} w(\nabla \cdot \boldsymbol M \cdot \nabla + \bar{q})d\Omega
+    \end{split}
+\end{equation}
+\begin{equation}
+    \mathrm{find} \; \boldsymbol M, w \in H_2 \quad
+    \begin{cases}
+        a(\delta \boldsymbol M,\boldsymbol M) + b(\delta \boldsymbol M, w) = g(\delta \boldsymbol M) & \forall \delta \boldsymbol M \in L_2 \\
+        \qquad \qquad \qquad  b(\boldsymbol M, \delta w) = f(\delta w) & \forall \delta w \in H_2
+    \end{cases}
+\end{equation}
+\begin{equation}
+    a(\delta \boldsymbol M,\boldsymbol M) = \int_{\Omega} \boldsymbol \kappa(\delta \boldsymbol M): \boldsymbol M d\Omega
+\end{equation}
+
 \section{MLS/RK meshfree approximation}
 In accordance with Moving Least Square approximation (MLS) \cite{belytschkoElementFreeGalerkin1994} or Reproducing Kernel approximation (RK) \cite{liu1995reproducing}, the domain $\Omega$ is discrete by a set of meshfree nodes $\{\boldsymbol x_I\}_{I=1}^{n_p}$, $n_p$ is the total number of meshfree nodes. And then, a variable $u$ in $\Omega$ can be approximated as follow:
 \begin{equation}
@@ -71,39 +159,6 @@ It is noted that, to ensure the invertibility of moment matrix, a well-posed mes
 \Vert u - u^i \Vert_{H_k} \le Ch^{p-k+1} \vert u \vert_{H_{p+1}}, \quad \forall k \le p+1
 \end{equation}
 
-\section{Hellinger-Reissner based RK gradient smoothing meshfree formulation}
-
-In this section, the Hellinger-Reissner reproducing kernel gradient smoothing meshfree formulations for second order elasticity problems and forth order thin plate problems are briefly introduced here.
-
-\subsection{Elasticity problems}
-
-For elasticity problems, the Hellinger-Reissner energy functional is given by:
-\begin{multline}\label{elasticityenergy}
-    \mathcal L(\boldsymbol \sigma, \boldsymbol u) = \int_{\Omega} \frac{1}{2} \boldsymbol \varepsilon(\boldsymbol \sigma) : \boldsymbol \sigma d\Omega - \int_{\Gamma_u} \boldsymbol n \cdot \boldsymbol \sigma \cdot \bar{\boldsymbol u} d\Gamma \\
-    - \int_{\Gamma_t} \boldsymbol u \cdot (\boldsymbol \sigma \cdot \boldsymbol n - \bar{\boldsymbol t}) d\Gamma + \int_{\Omega} \boldsymbol u \cdot (\boldsymbol \sigma \cdot \nabla + \bar{\boldsymbol b}) d\Omega
-\end{multline}
-where $\boldsymbol \varepsilon$ and $\boldsymbol \sigma$ stands for the strain and stress tensor respectively. $\Gamma_u$ and $\Gamma_t$ are the essential boundary and natural boundary satisfying that $\Gamma_u \cup \Gamma_t = \partial \Omega,\; \Gamma_u \cap \Gamma_t = \varnothing$. $\bar{\boldsymbol u}$ and $\bar{\boldsymbol t}$ are the prescribed displacement and traction on $\Gamma_u$ and $\Gamma_t$. $\bar{\boldsymbol b}$ denotes to the prescribed body force in $\Omega$. Introducing the standard variation argument to Eq.\ref{elasticityenergy} leads to the following HR weak form:
-\begin{equation}
-    \mathrm{find} \; \boldsymbol \sigma, \boldsymbol u \in H_1 \quad
-    \begin{array}{rr}
-    a(\delta \boldsymbol \sigma,\boldsymbol \sigma) + b(\delta \boldsymbol \sigma, \boldsymbol u) = g(\delta \boldsymbol \sigma) & \forall \delta \boldsymbol \sigma \in H_1 \\
-    b(\boldsymbol \sigma, \delta \boldsymbol u) = f(\delta \boldsymbol u) & \forall \delta \boldsymbol u \in H_1
-    \end{array}
-\end{equation}
-where $a:L_2\times L_2\rightarrow \mathbb R$, $b:L_2\times L_2 \rightarrow \mathbb R$ are bilinear forms: 
-\begin{equation}
-    a(\delta \boldsymbol \sigma,\boldsymbol \sigma) = \int_{\Omega} \boldsymbol \varepsilon(\delta \boldsymbol \sigma):\boldsymbol \sigma d\Omega
-\end{equation}
-\begin{equation}
-    b(\boldsymbol \sigma,\boldsymbol u) = - \int_{\Gamma} \boldsymbol u \cdot \boldsymbol \sigma \cdot \boldsymbol n d\Gamma + \int_{\Omega} \boldsymbol u \cdot \boldsymbol \sigma \cdot \nabla d\Omega + \int_{\Gamma_u} \boldsymbol u \cdot \boldsymbol \sigma \cdot \boldsymbol n d\Gamma
-\end{equation}
-and $g,f$ are the linear operators evaluated by
-\begin{equation}
-    g(\delta \boldsymbol \sigma) = \int_{\Gamma_u} \boldsymbol n \cdot \delta \boldsymbol \sigma \cdot \bar{\boldsymbol u} d\Gamma
-\end{equation}
-\begin{equation}
-    f(\delta \boldsymbol u) = - \int_{\Gamma_t} \delta \boldsymbol u \cdot \bar{\boldsymbol t} d\Gamma - \int_{\Omega} \delta \boldsymbol u \cdot \bar{\boldsymbol b} d\Omega
-\end{equation} \par
 In Hellinger-Reissner reproducing kernel gradient smoothing framework, the displacement $\boldsymbol u$ is approximated by traditional meshfree shape functions, namely $\boldsymbol u^h$:
 \begin{equation}
     \boldsymbol u^h(\boldsymbol x) = \sum_{I=1}^{n_p} \Psi_I(\boldsymbol x) \boldsymbol d_I
@@ -126,26 +181,6 @@ with
         \sigma_{ij}(\boldsymbol{x}) = \sigma_{ij}(\boldsymbol{0}) + x \sigma_{ij}
     \end{equation}
 \end{proof}
-\subsection{Thin plate problems}
-\begin{equation}\label{plateenergy}
-    \begin{split}
-        \mathcal L(\boldsymbol M, w) 
-        &= \int_{\Omega} \frac{1}{2} \boldsymbol \kappa(\boldsymbol M) : \boldsymbol M d\Omega \\ 
-        &- \int_{\Gamma_w} V_{\boldsymbol n}(\boldsymbol M) \bar{w} d\Gamma + \int_{\Gamma_\theta} M_{\boldsymbol{nn}}(\boldsymbol M)\bar{\theta}_{\boldsymbol n} d\Gamma - P(\boldsymbol M)\bar{w}\vert_{\Gamma_c} \\
-        &+ \int_{\Gamma_M} \theta_{\boldsymbol n}(w)(M_{\boldsymbol{nn}}-\bar{M}_{\boldsymbol{nn}})d\Gamma - \int_{\Gamma_V} w(V_{\boldsymbol n} - \bar{V}_{\boldsymbol n})d\Gamma \\ 
-        &- w(P-\bar P)\vert_{\Gamma_p} + \int_{\Omega} w(\nabla \cdot \boldsymbol M \cdot \nabla + \bar{q})d\Omega
-    \end{split}
-\end{equation}
-\begin{equation}
-    \mathrm{find} \; \boldsymbol M, w \in H_2 \quad
-    \begin{array}{rr}
-    a(\delta \boldsymbol M,\boldsymbol M) + b(\delta \boldsymbol M, w) = g(\delta \boldsymbol M) & \forall \delta \boldsymbol M \in L_2 \\
-    b(\boldsymbol M, \delta w) = f(\delta w) & \forall \delta w \in H_2
-    \end{array}
-\end{equation}
-\begin{equation}
-    a(\delta \boldsymbol M,\boldsymbol M) = \int_{\Omega} \boldsymbol \kappa(\delta \boldsymbol M): \boldsymbol M d\Omega
-\end{equation}
 
 \section{Error analysis for HR gradient smoothing meshfree formulation}
 \section*{Appendix A}
